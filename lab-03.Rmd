@@ -41,7 +41,7 @@ view(nobel)
 3) Laureates who are still alive (their died_date is NA)
 
 
-```{r G}
+```{r Q2 code}
 nobel_living <- nobel %>% #Is creating the new data frame out of nobel
   filter(!is.na(country), #Is opening filter, and beginning by filtering for ones where country is not NA
   gender != "org",        #Is filtering for ones where gender is not (! meaning not) equal to org
@@ -50,12 +50,35 @@ view(nobel_living)
   
 ```
 
-### Exercise 2
+## Exercise 2
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+### Set-up
+
+Rather than write up my own explanation, here is the one offered by Mason for this set-up portion.
+
+First, we’ll create a new variable to identify whether the laureate was in the US when they won their prize. We’ll use the `mutate()` function for this. The following pipeline mutates the `nobel_living` data frame by adding a new variable called `country_us`. We use an if statement to create this variable. The first argument in the `if_else()` function we’re using to write this if statement is the condition we’re testing for. If country is equal to `"USA"`, we set country_us to `"USA"`. If not, we set the country_us to `"Other"`.
+
+> Note: I do want it known that in my desire to make things look good I both looked up how to replicate making the variable names appear in boxes, *and* the text formatting used here. If only I I could dedicate a fraction of that neuroticism towards anything else.
+
+```{r setup code for q3}
+nobel_living <- nobel_living %>% #This is saying to create a change in nobel_living, modeled off of the same data frame
+  mutate(
+    country_us = if_else(country == "USA", "USA", "Other")
+  )
+```
+
+Next, we will limit our analysis to only the following categories: Physics, Medicine, Chemistry, and Economics.
+
+```{r}
+nobel_living_science <- nobel_living %>%
+  filter(category %in% c("Physics", "Medicine", "Chemistry", "Economics"))
+```
+
+Create a faceted bar plot visualizing the relationship between the category of prize and whether the laureate was in the US when they won the nobel prize. Interpret your visualization, and say a few words about whether the Buzzfeed headline is supported by the data.
+
+Laureate country and category of prize
+
+
 
 ### Exercise 3
 
