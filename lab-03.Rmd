@@ -58,7 +58,7 @@ Rather than write up my own explanation, here is the one offered by Mason for th
 
 First, we’ll create a new variable to identify whether the laureate was in the US when they won their prize. We’ll use the `mutate()` function for this. The following pipeline mutates the `nobel_living` data frame by adding a new variable called `country_us`. We use an if statement to create this variable. The first argument in the `if_else()` function we’re using to write this if statement is the condition we’re testing for. If country is equal to `"USA"`, we set country_us to `"USA"`. If not, we set the country_us to `"Other"`.
 
-> Note: I do want it known that in my desire to make things look good I both looked up how to replicate making the variable names appear in boxes, *and* the text formatting used here. If only I I could dedicate a fraction of that neuroticism towards anything else.
+> Note: I do want it known that in my desire to make things look good I both looked up how to replicate making the variable names appear in boxes, *and* the text formatting used here. And by looked up, I mean I went into the .rmd for the assignment instructions. If only I I could dedicate a fraction of that neuroticism towards anything else.
 
 ```{r setup code for q3}
 nobel_living <- nobel_living %>% #This is saying to create a change in nobel_living, modeled off of the same data frame
@@ -69,32 +69,72 @@ nobel_living <- nobel_living %>% #This is saying to create a change in nobel_liv
 
 Next, we will limit our analysis to only the following categories: Physics, Medicine, Chemistry, and Economics.
 
-```{r}
+```{r only science}
 nobel_living_science <- nobel_living %>%
   filter(category %in% c("Physics", "Medicine", "Chemistry", "Economics"))
 ```
 
 Create a faceted bar plot visualizing the relationship between the category of prize and whether the laureate was in the US when they won the nobel prize. Interpret your visualization, and say a few words about whether the Buzzfeed headline is supported by the data.
 
-Laureate country and category of prize
+
+1) Your visualization should be faceted by category.
+
+2) For each facet you should have two bars, one for winners in the US and one for Other.
+
+3) Flip the coordinates so the bars are horizontal, not vertical.
+
+```{r bar graph q3}
+ggplot(nobel_living_science, aes(y= country_us)) + #Alternatively to graphing it to y, coord_flip() would also work
+  geom_bar() +
+  facet_wrap(~ category)
+```
+
+Looking at the graph, it is the case that *more* nobel laureates lived in the U.S. compared to all other countries combined, I would not say it's accurate to say that **most** lived there. With the notable exception of economics, which as you pointed out, is a bit different from the science Nobel Prizes.
+
+## Exercise 3
+
+### Question 4
+Create a new variable called `born_country_us`  that has the value `"USA"` if the laureate is born in the US, and `"Other"` otherwise. How many of the winners are born in the US?
+
+```{r Born in USA}
+nobel_living_science <- nobel_living_science %>% #Wholesale stealing from earlier code, as one should.
+  mutate(
+    born_country_us = if_else(born_country == "USA", "USA", "Other"))
+nobel_living_science %>%
+  filter(born_country_us == "USA")
+```
+
+105 winners were born in the USA.
+
+### Question 5
+
+Add a second variable to your visualization from Exercise 3 based on whether the laureate was born in the US or not. Based on your visualization, do the data appear to support Buzzfeed’s claim? Explain your reasoning in 1-2 sentences.
+
+1. Your final visualization should contain a facet for each category.
+2. Within each facet, there should be a bar for whether the laureate won the award in the US or not.
+3. Each bar should have segments for whether the laureate was born in the US or not.
 
 
+```{r}
+ggplot(nobel_living_science, aes(y= country_us,
+                                 fill = born_country_us)) +
+  geom_bar() +
+  facet_wrap(~ category)
+```
 
-### Exercise 3
+The data shows that most U.S. based nobel laureates were born in the U.S. More accurately, one could say that far more Nobel laureates move to the U.S. from another country than from the U.S. to another country. But most U.S. laureates were born in the U.S.
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+## Exercise 4
 
-### Exercise 4
+### Question 6
 
-...
+In a single pipeline, filter for laureates who won their prize in the US, but were born outside of the US, and then create a frequency table (with the `count()` function) for their birth country (`born_country`) and arrange the resulting data frame in descending order of number of observations for each country. Which country is the most common?
 
-### Exercise 5
+```{r}
+nobel_living_science %>%  #What tibble we want
+  filter(country_us == "USA", born_country_us == "Other") %>% #Filtering for people who won in US but were born elsewhere
+  count(born_country) %>% #Table of different countries
+  arrange(desc(n)) #ARRANGEd by DESCending order of n (of born_country)
+```
 
-...
-
-### Exercise 6
-
-...
+There were seven (7) immigrants from Germany and the United Kingdom, who tied for the most.
