@@ -13,13 +13,40 @@ library(tidyverse)
 nobel <- read_csv("data/nobel.csv")
 ```
 
-## Exercises
+# Exercises
 
-### Exercise 1
+## Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here. Add code
-chunks as needed. Don’t forget to label your code chunk. Do not use
-spaces in code chunk labels.
+### Question 1
+
+How many observations and how many variables are in the dataset? Use
+inline code to answer this question. What does each row represent?
+
+``` r
+view(nobel)
+```
+
+935 observations of 26 variables. Each row represents an individual
+nobel laureate.
+
+### Question 2
+
+Create a new data frame called nobel\_living that filters for:
+
+1.  Laureates for whom country is available
+
+2.  Laureates who are people as opposed to organizations (organizations
+    are denoted with “org” as their gender)
+
+3.  Laureates who are still alive (their died\_date is NA)
+
+``` r
+nobel_living <- nobel %>% #Is creating the new data frame out of nobel
+  filter(!is.na(country), #Is opening filter, and beginning by filtering for ones where country is not NA
+  gender != "org",        #Is filtering for ones where gender is not (! meaning not) equal to org
+  is.na(died_date))       #Is filtering for ones that do not have a death date
+view(nobel_living)
+```
 
 ### Exercise 2
 
