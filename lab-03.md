@@ -1,7 +1,7 @@
 Lab 03 - Nobel laureates
 ================
-Insert your name here
-Insert date here
+Adam Paul
+2/11
 
 ### Load packages and data
 
